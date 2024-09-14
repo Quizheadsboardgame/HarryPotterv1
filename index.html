@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harry Potter Quiz</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: 'Baloo 2', sans-serif;
+            background-color: #38B6FF; /* Background color */
+            color: black;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        #yellow-box {
+            width: 200px;
+            height: 200px;
+            background-color: #FED405; /* Yellow color */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            color: black;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            border: 5px solid black; /* Black edging */
+            transition: transform 0.1s ease-in-out;
+        }
+
+        #question-answer {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        /* Keyframes for the bounce animation */
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Class to trigger the bounce animation */
+        .animate-bounce {
+            animation: bounce 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="yellow-box">HARRY POTTER</div>
+
+    <div id="question-answer"></div>
+
+    <script>
+        const yellowBox = document.getElementById("yellow-box");
+        const questionAnswerDiv = document.getElementById("question-answer");
+
+        // Array of Harry Potter trivia questions and answers
+        const harryPotterQuestions = [
+            { question: "What is the name of Harry Potter's pet owl?", answer: "Hedwig" },
+            { question: "What is the name of the school Harry Potter attends?", answer: "Hogwarts School of Witchcraft and Wizardry" },
+            { question: "Who is the author of the Harry Potter series?", answer: "J.K. Rowling" },
+            { question: "What is the name of Harry Potter's best friend?", answer: "Ron Weasley" },
+            { question: "What spell is used to disarm an opponent?", answer: "Expelliarmus" },
+            { question: "Which house is known for bravery and chivalry?", answer: "Gryffindor" },
+            { question: "What position does Harry Potter play on his Quidditch team?", answer: "Seeker" },
+            { question: "What is the name of the dark wizard Harry Potter must defeat?", answer: "Lord Voldemort" },
+            { question: "What is the name of the three-headed dog in 'Harry Potter and the Philosopher's Stone'?", answer: "Fluffy" },
+            { question: "What is Hermione Granger's favorite class?", answer: "Charms" },
+            { question: "Who is the headmaster of Hogwarts during Harry's first year?", answer: "Albus Dumbledore" },
+            { question: "What is the name of the Weasley's family home?", answer: "The Burrow" },
+            { question: "What type of creature is Dobby?", answer: "House-elf" },
+            { question: "Which magical object shows the deepest desire of the heart?", answer: "The Mirror of Erised" },
+            { question: "What is the name of Harry's godfather?", answer: "Sirius Black" },
+            { question: "What potion grants the drinker temporary luck?", answer: "Felix Felicis" },
+            { question: "What is the name of the secret society formed by Dumbledore to fight Voldemort?", answer: "The Order of the Phoenix" },
+            { question: "Who becomes the Minister of Magic at the end of the series?", answer: "Kingsley Shacklebolt" },
+            { question: "What type of creature is a Hippogriff?", answer: "A magical creature that is half horse, half eagle" },
+            { question: "What is the name of the wizard prison?", answer: "Azkaban" },
+            { question: "Which magical object is used to store and review memories?", answer: "The Pensieve" },
+            { question: "What are the names of Harry Potter's parents?", answer: "James and Lily Potter" },
+            { question: "What is the name of the spell used to summon objects?", answer: "Accio" },
+            { question: "What is the name of the enchanted diary that Tom Riddle uses to control Ginny Weasley?", answer: "Tom Riddle's Diary" },
+            { question: "What is the name of the giant snake Voldemort controls?", answer: "Nagini" },
+            { question: "What magical creature is known for its ability to turn invisible?", answer: "The Invisibility Cloak" },
+            { question: "What is the name of the magical store in Diagon Alley where Harry buys his wand?", answer: "Ollivanders" },
+            { question: "What is the name of the book that contains the spells and potions used in the Dark Arts?", answer: "The Dark Arts book" },
+            { question: "Which Hogwarts professor teaches Potions?", answer: "Severus Snape" },
+            { question: "What is the name of the goblin who manages Gringotts Bank?", answer: "Griphook" },
+            { question: "What is the name of the wizarding school in France?", answer: "Beauxbatons Academy of Magic" },
+            { question: "What is the name of the Weasley's twin brothers?", answer: "Fred and George Weasley" },
+            { question: "Who is the Care of Magical Creatures professor during Harry's time at Hogwarts?", answer: "Rubeus Hagrid" },
+            { question: "What type of magical creature guards the entrance to the Ravenclaw common room?", answer: "A bronze eagle" },
+            { question: "What does the spell 'Lumos' do?", answer: "It lights up the tip of the caster's wand" },
+            { question: "What is the name of the magical plant used to help Harry breathe underwater in the second task of the Triwizard Tournament?", answer: "Gillyweed" },
+            { question: "What is the name of the dark wizard who founded Slytherin House?", answer: "Salazar Slytherin" },
+            { question: "What is the name of the potion that can heal almost any wound?", answer: "Draught of Living Death" },
+            { question: "Which magical creature is known for its ability to tell the future?", answer: "A Seer" },
+            { question: "What is the name of the magical game that involves hitting balls with bats and flying on brooms?", answer: "Quidditch" },
+            { question: "Who is the head of Gryffindor House?", answer: "Minerva McGonagall" },
+            { question: "What is the name of the spell that causes objects to levitate?", answer: "Wingardium Leviosa" },
+            { question: "Which character is known for his ability to speak Parseltongue?", answer: "Harry Potter" },
+            { question: "What is the name of the magical map that shows everyone's location within Hogwarts?", answer: "The Marauder's Map" },
+            { question: "What magical object is used to store and review memories?", answer: "The Pensieve" },
+            { question: "What is the name of the cursed vault that Harry and his friends explore in the final book?", answer: "The Room of Requirement" }
+        ];
+
+        let shuffledQuestions = [];
+        let questionIndex = 0;
+
+        // Shuffle the questions array
+        function shuffleArray(array) {
+            let currentIndex = array.length, randomIndex;
+            while (currentIndex !== 0) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex--;
+                [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+            }
+            return array;
+        }
+
+        // Initialize questions
+        function initializeQuestions() {
+            shuffledQuestions = shuffleArray([...harryPotterQuestions]);
+            questionIndex = 0;
+            displayQuestion();
+        }
+
+        // Function to display the current question
+        function displayQuestion() {
+            if (shuffledQuestions.length === 0) {
+                questionAnswerDiv.innerHTML = "<strong>No more questions!</strong>";
+                return;
+            }
+            const currentQA = shuffledQuestions[questionIndex];
+            questionAnswerDiv.innerHTML = `<strong>Question:</strong> ${currentQA.question}<br><strong>Answer:</strong> ${currentQA.answer}`;
+        }
+
+        // Bounce animation on click
+        yellowBox.addEventListener("click", () => {
+            yellowBox.classList.add("animate-bounce");
+            setTimeout(() => {
+                yellowBox.classList.remove("animate-bounce");
+            }, 300);
+
+            questionIndex = (questionIndex + 1) % shuffledQuestions.length;
+            displayQuestion();
+        });
+
+        // Initialize questions on page load
+        window.onload = initializeQuestions;
+    </script>
+
+</body>
+</html>
